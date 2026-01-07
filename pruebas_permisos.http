@@ -1,0 +1,93 @@
+# Pruebas del Sistema de Permisos por Roles
+# ========================================
+
+# PASO 1: Obtener token como DIRECTIVO
+POST http://127.0.0.1:8000/api/token/
+Content-Type: application/json
+
+{
+    "username": "directivo1",
+    "password": "dir123"
+}
+
+###
+
+# PASO 2: Ver perfil del directivo (con el token obtenido)
+GET http://127.0.0.1:8000/api/mi-perfil/
+Authorization: Bearer YOUR_TOKEN_HERE
+
+###
+
+# PASO 3: Listar encuestas como directivo (debe ver la encuesta de su institución)
+GET http://127.0.0.1:8000/api/encuestas/
+Authorization: Bearer YOUR_TOKEN_HERE
+
+###
+
+# PASO 4: Crear nueva encuesta como directivo (DEBE FUNCIONAR)
+POST http://127.0.0.1:8000/api/encuestas/
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
+{
+    "titulo": "Test Encuesta Directivo",
+    "descripcion": "Prueba de permisos para directivo"
+}
+
+###
+
+# PASO 5: Obtener token como DOCENTE
+POST http://127.0.0.1:8000/api/token/
+Content-Type: application/json
+
+{
+    "username": "docente1", 
+    "password": "doc123"
+}
+
+###
+
+# PASO 6: Intentar crear encuesta como docente (DEBE FALLAR)
+POST http://127.0.0.1:8000/api/encuestas/
+Authorization: Bearer DOCENTE_TOKEN_HERE
+Content-Type: application/json
+
+{
+    "titulo": "Test Encuesta Docente",
+    "descripcion": "Esto debe fallar"
+}
+
+###
+
+# PASO 7: Ver encuestas como docente (debe ver las de su institución)
+GET http://127.0.0.1:8000/api/encuestas/
+Authorization: Bearer DOCENTE_TOKEN_HERE
+
+###
+
+# PASO 8: Crear respuesta como docente (DEBE FUNCIONAR)
+POST http://127.0.0.1:8000/api/respuestas/
+Authorization: Bearer DOCENTE_TOKEN_HERE
+Content-Type: application/json
+
+{
+    "encuesta": 1,
+    "pregunta": 1, 
+    "opcion": 3
+}
+
+###
+
+# PASO 9: Ver reporte como admin_tic
+POST http://127.0.0.1:8000/api/token/
+Content-Type: application/json
+
+{
+    "username": "admin_tic",
+    "password": "admin123"
+}
+
+###
+
+GET http://127.0.0.1:8000/api/reporte-resumen/
+Authorization: Bearer ADMIN_TOKEN_HERE
